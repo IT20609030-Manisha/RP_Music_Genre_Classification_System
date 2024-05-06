@@ -1,10 +1,12 @@
-import imp
+import importlib
 import librosa
 import numpy as np
+import sys
 from keras.models import load_model
+import requests
 
-genres = {0: "metal", 1: "disco", 2: "classical", 3: "hiphop", 4: "jazz", 
-            5: "country", 6: "pop", 7: "blues", 8: "reggae", 9: "rock"}
+genres = {0: "Metal", 1: "Disco", 2: "Classical", 3: "Hiphop", 4: "Jazz", 
+            5: "Country", 6: "Pop", 7: "Blues", 8: "Reggae", 9: "Rock"}
 song_samples = 660000
 
 
@@ -40,7 +42,7 @@ def to_melspec(signals):
        
 def get_genre(path, debug=False):
     
-    model = load_model('F:\\Genre_Classification\\weights\\genres_full_vgg16.h5')
+    model = load_model('F:\\Research Project\\RP_Music_Genre_Classification_System\\weights\\genres_full_vgg16.h5')
     
     y = load_song(path)[0]
     predictions = []
@@ -62,7 +64,29 @@ def get_genre(path, debug=False):
         print("Confidences:\n{}".format([round(x, 2) for x in np.amax(pr, axis=1)]))
         print("\nOutput Predictions:\n{}\nPredicted class:".format(np.mean(pr, axis=0)))
     
-    return genres[np.bincount(predictions).argmax()] # list(np.mean(pr, axis=0))
+    return genres[np.bincount(predictions).argmax()] # list(np.mean(pr, axis=0)
 
 if __name__ == '__main__':
-    print(get_genre('./audios/jazz_music.mp3', True)) 
+    # print(get_genre('././audios/Take Me Home.mp3', True))
+    if len(sys.argv) != 2:
+        print("Usage: python predict_vgg16.py <audio_file_path>")
+        sys.exit(1)
+    audio_path = sys.argv[1]
+    print("Audio Path:", audio_path)  # Add this line to print the audio_path
+    genre = get_genre(audio_path, True)
+    print("Predicted Genre:", genre)
+
+    # Send the generated lo-fi MIDI file to the server
+    url = 'http://localhost:5001/receive-data'
+    data = {'genre': genre}
+    
+    try:
+        response = requests.post(url, json=data)  # Send data as JSON in a POST request
+        response_data = response.json()
+
+        if response.status_code == 200 and response_data.get('success'):
+            print('Lo-fi MIDI file sent to the server successfully!')
+        else:
+            print('Failed to send the lo-fi MIDI file to the server.')
+    except requests.RequestException as e:
+        print('Error:', e)
