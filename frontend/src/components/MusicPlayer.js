@@ -10,72 +10,45 @@ import musicPlayerImage from '../images/player2.png';
 const MusicPlayer = () => {
   const [file, setFile] = useState(null);
   const [showGenre, setShowGenre] = useState(false);
-  //const [predictedGenre, setPredictedGenre] = useState(null);
-  let predictedGenre = '';
-  let file_path  ='';
-  let file_x = '../audios/classical_Music.mp3'
+  const [predictedGenre, setPredictedGenre] = useState('');
+  let file_path = '';
 
   const onDrop = (acceptedFiles) => {
     setFile(acceptedFiles[0]);
-    //setPredictedGenre(null);
-    //toast.success('Uploaded Successfully!', { position: "top-center" });
-    //getGenre();
   };
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop, accept: 'audio/mp3' });
 
-  // const handlePredictGenre = () => {
-  //   setShowGenre(true);
-  // };
   const handlePredictGenre = async () => {
-    
-    file_path  ='';
-    setShowGenre(false);
-    predictedGenre = '';
-
-
     file_path = file.path;
-    
+    setShowGenre(false);
+    setPredictedGenre('');
 
     const formData = new FormData();
     formData.append('audioFilePath', file_path);
 
-    console.log(file_path)
-    console.log("printing formdata")
-    console.log(file)
-    console.log(formData)
-  
     try {
       const response = await fetch('http://localhost:5000/predict-genre', {
         method: 'POST',
-        // body: formData
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ audioFilePath: file_path}) 
+        body: JSON.stringify({ audioFilePath: file_path })
       });
-  
+
       if (response.ok) {
         const data = await response.json();
-        console.log("Api working")
-        
-        // Update the state with the predicted genre
-        predictedGenre = data.predicted_genre;
+        setPredictedGenre(data.predicted_genre);
         setShowGenre(true);
-        console.log('Predicted Genre:', predictedGenre);
       } else {
         console.error('Failed to predict genre');
-        // Handle the error, e.g., display a toast message
         toast.error('Failed to predict genre', { position: "top-center" });
       }
     } catch (error) {
       console.error('Error predicting genre:', error);
-      // Handle the error, e.g., display a toast message
       toast.error('Error predicting genre', { position: "top-center" });
     }
   };
-
-  let genreIndex = null;
 
   return (
     <div className="container mt-5">
@@ -83,7 +56,7 @@ const MusicPlayer = () => {
       <div {...getRootProps()} className="dropzone text-center">
         <input {...getInputProps()} />
         <button type="button" className="btn btn-outline-primary btn-lg">
-            Uplaod the Song <i className="fa-solid fa-upload"></i>
+            Upload the Song <i className="fa-solid fa-upload"></i>
         </button>
         <p className="mb-0">Drag 'n' drop an MP3 file here, or click to select one</p>
       </div>
@@ -98,16 +71,7 @@ const MusicPlayer = () => {
           </div>
           <div>
             {showGenre && (
-              <div>
-                <div>
-                  <h2 className="label">Genre : {predictedGenre}</h2>
-                </div>
-                <div className="mt-3">
-                  <button type="button" className="btn btn-outline-primary">
-                    View More Info <i className="fa-solid fa-circle-info"></i>
-                  </button>
-                </div>
-              </div>
+              <DisplayGenre predictedGenre={predictedGenre} />
             )}
           </div>
           <div className="d-flex justify-content-center">
