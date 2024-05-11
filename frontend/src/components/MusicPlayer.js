@@ -11,6 +11,7 @@ const MusicPlayer = () => {
   const [file, setFile] = useState(null);
   const [showGenre, setShowGenre] = useState(false);
   const [predictedGenre, setPredictedGenre] = useState('');
+  const [loading, setLoading] = useState(false);
   let file_path = '';
 
   const onDrop = (acceptedFiles) => {
@@ -23,6 +24,7 @@ const MusicPlayer = () => {
     file_path = file.path;
     setShowGenre(false);
     setPredictedGenre('');
+    setLoading(true);
 
     const formData = new FormData();
     formData.append('audioFilePath', file_path);
@@ -47,6 +49,8 @@ const MusicPlayer = () => {
     } catch (error) {
       console.error('Error predicting genre:', error);
       toast.error('Error predicting genre', { position: "top-center" });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,7 +74,9 @@ const MusicPlayer = () => {
             </button>
           </div>
           <div>
-            {showGenre && (
+            {loading ? (
+              <div className="loader mt-4"></div>
+            ) : showGenre && (
               <DisplayGenre predictedGenre={predictedGenre} />
             )}
           </div>
@@ -93,5 +99,4 @@ const MusicPlayer = () => {
     </div>
   );
 };
-
 export default MusicPlayer;
