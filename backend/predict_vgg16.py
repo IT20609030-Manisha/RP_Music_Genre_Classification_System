@@ -77,7 +77,7 @@ if __name__ == '__main__':
     print("Predicted Genre:", genre)
 
     # Send the generated lo-fi MIDI file to the server
-    url = 'http://localhost:5001/receive-data'
+    url = 'http://localhost:5000/receive-data'
     data = {'genre': genre}
     
     try:
