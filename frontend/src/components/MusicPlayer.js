@@ -59,17 +59,17 @@ const MusicPlayer = () => {
         
       <div {...getRootProps()} className="dropzone text-center">
         <input {...getInputProps()} />
-        <button type="button" className="btn btn-outline-primary btn-lg">
+        <button type="button" className="btn btn-warning btn-lg">
             Upload the Song <i className="fa-solid fa-upload"></i>
         </button>
-        <p className="mb-0">Drag 'n' drop an MP3 file here, or click to select one</p>
+        <p className="mb-0 fs-4 text-white">Drag 'n' drop an MP3 file here, or click to select one</p>
       </div>
       {file && (
-        <div className="mt-3">
+        <div className="mt-5">
             
-          <h2>{file.name}</h2>
+          <h4 className='text-white'>{file.name}</h4>
           <div className="mt-4">
-            <button type="button" className="btn btn-outline-primary" onClick={handlePredictGenre}>
+            <button type="button" className="btn btn-warning btn-lg" onClick={handlePredictGenre}>
                 Predict Genre <i className="fa-solid fa-music"></i>
             </button>
           </div>

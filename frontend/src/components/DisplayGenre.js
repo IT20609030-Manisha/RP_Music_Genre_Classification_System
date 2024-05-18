@@ -27,7 +27,7 @@ const DisplayGenre = ({ predictedGenre }) => {
     const fetchTrendingTracks = async () => {
         setIsFetching(true);
         // const token = 'YOUR_SPOTIFY_ACCESS_TOKEN';  // Replace with your Spotify access token
-        const url = `https://api.spotify.com/v1/recommendations?seed_genres=${predictedGenre.toLowerCase()}`;
+        const url = `https://api.spotify.com/v1/recommendations?seed_genres=${predictedGenre.toLowerCase()}&limit=50`;
 
         try {
             const response = await fetch(url, {
@@ -53,17 +53,17 @@ const DisplayGenre = ({ predictedGenre }) => {
     };
 
     return (
-        <div className="genre-bars mt-3">
+        <div className="genre-bars mt-4">
             <div className="genre-bar">
                 {/* <div className="bar" style={{ width: '100%' }}></div> */}
-                <h2 className="label">Genre : {predictedGenre}</h2>
+                <h2 className="label text-white">Genre : {predictedGenre}</h2>
             </div>
-            <div className="mt-3">
-                <button type="button" className="btn btn-outline-primary" onClick={fetchTrendingTracks}>
+            <div className="mt-2">
+                <button type="button" className="btn btn-warning btn-lg" onClick={fetchTrendingTracks}>
                     View Trending Tracks <i className="fa-solid fa-circle-info"></i>
                 </button>
             </div>
-            <div className="trending-tracks mt-3">
+            <div className="trending-tracks mt-4">
                 {trendingTracks.length > 0 && trendingTracks.map(track => (
                     <div className="card" key={track.id}>
                         <img src={track.album.images[0]?.url} className="card-img-top" alt={`${track.album.name} cover`} />
