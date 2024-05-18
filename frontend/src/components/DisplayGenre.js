@@ -26,7 +26,7 @@ const DisplayGenre = ({ predictedGenre }) => {
 
     const fetchTrendingTracks = async () => {
         setIsFetching(true);
-        // const token = 'YOUR_SPOTIFY_ACCESS_TOKEN';  // Replace with your Spotify access token
+        
         const url = `https://api.spotify.com/v1/recommendations?seed_genres=${predictedGenre.toLowerCase()}&limit=50`;
 
         try {

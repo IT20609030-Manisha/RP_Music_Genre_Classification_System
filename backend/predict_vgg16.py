@@ -72,11 +72,11 @@ if __name__ == '__main__':
         print("Usage: python predict_vgg16.py <audio_file_path>")
         sys.exit(1)
     audio_path = sys.argv[1]
-    print("Audio Path:", audio_path)  # Add this line to print the audio_path
+    print("Audio Path:", audio_path)  
     genre = get_genre(audio_path, True)
     print("Predicted Genre:", genre)
 
-    # Send the generated lo-fi MIDI file to the server
+    # Send the generated predicted genre to the server
     url = 'http://localhost:5000/receive-data'
     data = {'genre': genre}
     
@@ -85,8 +85,8 @@ if __name__ == '__main__':
         response_data = response.json()
 
         if response.status_code == 200 and response_data.get('success'):
-            print('Lo-fi MIDI file sent to the server successfully!')
+            print('Sent to the server successfully!')
         else:
-            print('Failed to send the lo-fi MIDI file to the server.')
+            print('Failed to send  to the server.')
     except requests.RequestException as e:
         print('Error:', e)

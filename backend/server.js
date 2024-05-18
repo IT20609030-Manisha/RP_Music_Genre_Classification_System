@@ -46,11 +46,10 @@ app.post('/receive-data', (req, res) => {
 
   predicted_genre = req.body.genre;
 
-        // Here you can process the received file path as per your requirements
+       
         console.log('Received Predicted Genre:', predicted_genre);
         isRecieved = true;
 
-        // Send response back to the client    
         res.json({ success: true, message: 'File received successfully' });
 
 });
